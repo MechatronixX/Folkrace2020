@@ -1,91 +1,84 @@
-/*
- Name:		Folkrace2020.ino
- Created:	1/16/2020 7:31:25 
-*/
+/*The range readings are in units of mm.*/
 
-#include "pins.h"
-#include <Adafruit_VL53L0X.h>
+#include <stdio.h>
+#include <Wire.h>
+#include <VL53L0X.h> //From Polulu. TODO: Should perhaps have this one directly in the repo.
 
-// Addresses should be 0x29 to 0x7F according to this source: https://robojax.com/learn/arduino/?vid=robojax_VL53L0X_I2C_address
-// TODO: Why?? Had problems with other addresses tried, than these. Why doesnt the set function cap that in that case. 
-const uint8_t adr_left =  (0x29 + 0x01);
-const uint8_t adr_right = 0x2B;
 
-Adafruit_VL53L0X vl053_left = Adafruit_VL53L0X();
-Adafruit_VL53L0X vl053_right = Adafruit_VL53L0X();
+VL53L0X sensor_left;
+VL53L0X sensor_right;
 
-void setup() 
+constexpr uint8_t pin_left = 33;
+constexpr uint8_t pin_right = 32;
+
+//Seems to be a max 7 bit address so do not exceed 0x7F
+constexpr uint8_t adr_left = 1 << 0;
+constexpr uint8_t adr_right = 1 << 1;
+
+void setup()
 {
-	Serial.begin(115200);
+	Serial.begin(9600);
 
-	// wait until serial port opens for native USB devices
-	while (!Serial) 
-	{
-		delay(1);
-	}
+	//Turn on left sensor 
+	//pinMode(pin_left, INPUT); //Tri-states pin
 
-	Serial.println("Starting initialization");
-	pinMode(pin::VL053_left, OUTPUT);
-	pinMode(pin::VL053_right, OUTPUT); 
+	//Turn off sensors, inits a reset. 
+	pinMode(pin_right, OUTPUT);
+	digitalWrite(pin_right, LOW);
 
-	Serial.println("Pins are low");
+	pinMode(pin_left, OUTPUT);
+	digitalWrite(pin_left, LOW);
 
-	digitalWrite(pin::VL053_left, LOW);
-	digitalWrite(pin::VL053_right, LOW);
-
-	delay(500);
-
-	//Release by tristate. 
-	pinMode(pin::VL053_left, INPUT); 
-	
-	//digitalWrite(pin::VL053_left, HIGH); 
+	//Wait a little to ensure they are off. 
 	delay(100);
+	Wire.begin();
 
-	if (vl053_left.begin(adr_left))
-	{
-		Serial.println("Left started ok"); 
-	}
-	else
-	{
-		Serial.println("Left error");
-	}
-
-	digitalWrite(pin::VL053_left, LOW); 
-	delay(1000);
-	digitalWrite(pin::VL053_right, HIGH); 
-
+	//Turn on left sensor 
+	pinMode(pin_left, INPUT);
+	//digitalWrite(pin_left, HIGH); 
+	delay(2);
+	sensor_left.setAddress(adr_left);
 	delay(2);
 
-	if (vl053_right.begin(adr_right))
+	//Turn on right sensor
+	pinMode(pin_right, INPUT);
+	delay(50);
+	sensor_right.setAddress(adr_right);
+
+	sensor_right.setTimeout(500);
+	sensor_left.setTimeout(500);
+
+	if (!sensor_left.init())
 	{
-		Serial.println("Right started ok");
+		Serial.println("Failed to detect and initialize left sensor!");
+		while (1) {}
 	}
-	else
+
+	if (!sensor_right.init())
 	{
-		Serial.println("Right error");
+		Serial.println("Failed to detect and initialize right sensor!");
+		while (1) {}
 	}
 
-
-	while (1);
-
+	// Start continuous back-to-back mode (take readings as
+	// fast as possible).  To use continuous timed mode
+	// instead, provide a desired inter-measurement period in
+	// ms (e.g. sensor.startContinuous(100)).
+	sensor_left.startContinuous();
+	sensor_right.startContinuous();
 }
 
-uint8_t address = 0;
-void loop() {
-	VL53L0X_RangingMeasurementData_t measure;
+char buffer[50];
 
-	Serial.print("Reading a measurement... ");
-	//lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
+void loop()
+{
+	sprintf(buffer, "Left: %i \t \t Right: %i \n",	sensor_left.readRangeContinuousMillimeters(),
+													sensor_right.readRangeContinuousMillimeters());
 
-	if (measure.RangeStatus != 4) 
-	{  // phase failures have incorrect data
-		Serial.print("Distance (mm): "); 
-		Serial.println(measure.RangeMilliMeter);
-	}
-	else 
+	Serial.print(buffer);
+
+	if (sensor_left.timeoutOccurred() || sensor_right.timeoutOccurred())
 	{
-		Serial.println(" out of range ");
+		Serial.print(" TIMEOUT");
 	}
-
-	delay(100);
 }
