@@ -11,9 +11,13 @@
 
 namespace pin
 {
-	const uint8_t VL053_left = 33; 
-	const uint8_t VL053_right = 32; 
-}
+namespace VL53
+{
+	const uint8_t front_left = 33;
+	const uint8_t front_right = 32;
+
+}//namespace VL53
+}//namespace pin
 
 
 #endif
