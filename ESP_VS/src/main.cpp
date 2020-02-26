@@ -23,21 +23,22 @@ void loop() {
   if (Serial.available() > 0) {
   
     // read the incoming byte:
-    int state = Serial.parseInt();
+    int state = Serial2.parseInt();
     // say what you got:
     if (state < -90){
-      Serial.printf("Can't execute command, too low value %d must be in range -90<->90\n", state);
-      Serial.println("Enter new steer angle");
+      Serial2.printf("Can't execute command, too low value %d must be in range -90<->90\n", state);
+      Serial2.println("Enter new steer angle");
     }
     else if (state > 90){
-      Serial.printf("Can't execute command, too high value %d must be in range -90<->90\n", state);
-      Serial.println("Enter new steer angle");
+      Serial2.printf("Can't execute command, too high value %d must be in range -90<->90\n", state);
+      Serial2.println("Enter new steer angle");
     }
     else{
+      Serial2.printf("Execute command, turn to %d\n", state);
       Serial.printf("Execute command, turn to %d\n", state);
       steer(fs,state);
       steer(bs,state);
-      Serial.println("Enter new steer angle");
+      Serial2.println("Enter new steer angle");
     }    
   }
   delay(1000);
