@@ -6,6 +6,7 @@ int incomingByte = 0;    // for incoming serial data
 
 void setup() {
   Serial.begin(115200);    // opens serial port, sets data rate to 115200 bps
+  Serial2.begin(115200);
   //analogWriteResolution(8); // set resolution to 10 bits for all pins
   //pinMode(PWMA, OUTPUT);
   frontS.attach(fsPin);
@@ -13,7 +14,8 @@ void setup() {
   delay(1000);
   steer(fs,0);
   steer(bs,0);
-  Serial.println("Enter new steer angle");
+  Serial.println("Enter new steer angle dummy");
+  Serial2.println("Enter new steer angle:");
 }
 
 void loop() {
