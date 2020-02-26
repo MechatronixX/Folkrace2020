@@ -6,7 +6,6 @@ int incomingByte = 0;    // for incoming serial data
 
 void setup() {
   Serial.begin(115200);    // opens serial port, sets data rate to 115200 bps
-  Serial2.begin(115200);
   //analogWriteResolution(8); // set resolution to 10 bits for all pins
   //pinMode(PWMA, OUTPUT);
   frontS.attach(fsPin);
@@ -15,7 +14,6 @@ void setup() {
   steer(fs,0);
   steer(bs,0);
   Serial.println("Enter new steer angle dummy");
-  Serial2.println("Enter new steer angle:");
 }
 
 void loop() {
@@ -39,27 +37,6 @@ void loop() {
       steer(fs,state);
       steer(bs,state);
       Serial.println("Enter new steer angle");
-    }    
-  }
-  if (Serial2.available() > 0) {
-  
-    // read the incoming byte:
-    int state = Serial2.parseInt();
-    // say what you got:
-    if (state < -90){
-      Serial2.printf("Can't execute command, too low value %d must be in range -90<->90\n", state);
-      Serial2.println("Enter new steer angle");
-    }
-    else if (state > 90){
-      Serial2.printf("Can't execute command, too high value %d must be in range -90<->90\n", state);
-      Serial2.println("Enter new steer angle");
-    }
-    else{
-      Serial2.printf("Execute command, turn to %d\n", state);
-      Serial2.printf("Execute command, turn to %d\n", state);
-      steer(fs,state);
-      steer(bs,state);
-      Serial2.println("Enter new steer angle");
     }    
   }
   delay(1000);
