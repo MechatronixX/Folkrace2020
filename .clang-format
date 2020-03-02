@@ -1,0 +1,8 @@
+BasedOnStyle: Mozilla
+BreakBeforeBraces: Allman
+IndentWidth: 4
+Language: Cpp
+
+
+
+
