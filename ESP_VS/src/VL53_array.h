@@ -45,8 +45,7 @@ extern void shutAllOff();
 extern void printOne(uint8_t index);
 
 /// Reset all sensor addresses and assign them a unique address.
-void
-initAll()
+void initAll()
 {
     // Reset all sensors, then release them one by one and set their addresses.
     // Note that we do not care about the address as long as it is
@@ -71,8 +70,7 @@ initAll()
     }
 }
 
-void
-readAll()
+void readAll()
 {
     for (uint8_t i = 0; i < num_sensors; i++)
     {
@@ -84,8 +82,7 @@ readAll()
     }
 }
 
-void
-printAll()
+void printAll()
 {
     for (uint8_t i = 0; i < num_sensors; i++)
     {
@@ -94,8 +91,7 @@ printAll()
     Serial.println();
 }
 
-void
-print(uint8_t index)
+void print(uint8_t index)
 {
     printOne(index);
     Serial.println();
@@ -106,12 +102,10 @@ print(uint8_t index)
 // Print the sensors one by one, saves a lot of memory instead of returning a
 // string
 // with all sensors.
-void
-printOne(uint8_t index)
+void printOne(uint8_t index)
 {
     char buffer[200];
-    sprintf(buffer, "ID: %i # D(mm) %.1f \t T(ms): t: %i ", index,
-            sensors[index].result.distance * 1000,
+    sprintf(buffer, "ID: %i # D(mm) %.1f \t T(ms): t: %i ", index, sensors[index].result.distance * 1000,
             sensors[index].result.timestamp);
 
     // Serial.println("Hallolu");
@@ -119,8 +113,7 @@ printOne(uint8_t index)
     Serial.print(buffer);
 }
 
-void
-shutAllOff()
+void shutAllOff()
 {
     for (uint8_t i = 0; i < num_sensors; i++)
     {

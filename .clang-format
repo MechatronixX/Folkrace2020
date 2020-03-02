@@ -1,8 +1,14 @@
 BasedOnStyle: Mozilla
+
+# This creates line breaks after most, but not 
+# after function returns type
 BreakBeforeBraces: Allman
+AlwaysBreakAfterDefinitionReturnType: None 
 IndentWidth: 4
 ColumnLimit: 120
+
 Language: Cpp
+
 
 
 

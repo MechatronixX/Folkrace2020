@@ -6,8 +6,7 @@
 #include "VL53_array.h"
 int incomingByte = 0; // for incoming serial data
 
-void
-setup()
+void setup()
 {
     Serial.begin(115200);
 
@@ -41,8 +40,7 @@ setup()
     Serial.println("Enter new throttle dummy");
 }
 
-void
-loop()
+void loop()
 {
     // send data only when you receive data :
     if (Serial.available() > 0)

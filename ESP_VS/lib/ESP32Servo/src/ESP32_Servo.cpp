@@ -103,14 +103,12 @@ Servo::Servo()
     }
 }
 
-int
-Servo::attach(int pin)
+int Servo::attach(int pin)
 {
     return (this->attach(pin, DEFAULT_uS_LOW, DEFAULT_uS_HIGH));
 }
 
-int
-Servo::attach(int pin, int min, int max)
+int Servo::attach(int pin, int min, int max)
 {
     if ((this->servoChannel <= MAX_SERVOS) && (this->servoChannel > 0))
     {
@@ -157,8 +155,7 @@ Servo::attach(int pin, int min, int max)
     return 1;
 }
 
-void
-Servo::detach()
+void Servo::detach()
 {
     if (this->attached())
     {
@@ -169,8 +166,7 @@ Servo::detach()
     }
 }
 
-void
-Servo::write(int value)
+void Servo::write(int value)
 {
     // treat values less than MIN_PULSE_WIDTH (500) as angles in degrees (valid values in microseconds are handled as
     // microseconds)
@@ -186,8 +182,7 @@ Servo::write(int value)
     this->writeMicroseconds(value);
 }
 
-void
-Servo::writeMicroseconds(int value)
+void Servo::writeMicroseconds(int value)
 {
     // calculate and store the values for the given channel
     if ((this->servoChannel <= MAX_SERVOS) && (this->attached())) // ensure channel is valid
@@ -209,8 +204,7 @@ int Servo::read() // return the value as degrees
     return (map(readMicroseconds() + 1, this->min, this->max, 0, 180));
 }
 
-int
-Servo::readMicroseconds()
+int Servo::readMicroseconds()
 {
     int pulsewidthUsec;
     if ((this->servoChannel <= MAX_SERVOS) && (this->attached()))
@@ -225,14 +219,12 @@ Servo::readMicroseconds()
     return (pulsewidthUsec);
 }
 
-bool
-Servo::attached()
+bool Servo::attached()
 {
     return (ChannelUsed[this->servoChannel]);
 }
 
-void
-Servo::setTimerWidth(int value)
+void Servo::setTimerWidth(int value)
 {
     // only allow values between 16 and 20
     if (value < 16)
@@ -266,20 +258,17 @@ Servo::setTimerWidth(int value)
     }
 }
 
-int
-Servo::readTimerWidth()
+int Servo::readTimerWidth()
 {
     return (this->timer_width);
 }
 
-int
-Servo::usToTicks(int usec)
+int Servo::usToTicks(int usec)
 {
     return (int)((float)usec / ((float)REFRESH_USEC / (float)this->timer_width_ticks));
 }
 
-int
-Servo::ticksToUs(int ticks)
+int Servo::ticksToUs(int ticks)
 {
     return (int)((float)ticks * ((float)REFRESH_USEC / (float)this->timer_width_ticks));
 }
