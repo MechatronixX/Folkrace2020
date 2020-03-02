@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <analogWrite.h>      // For motor controll
+#include <ESP32Encoder.h>
 #include <Servo.h>
 
 //-----------STARTMODULE---------------
@@ -14,23 +15,21 @@
 #define bsPin 18
 
 //--------------Motors-----------------
-//Motor 1
-// not used
+
 //Motor 2
 #define BIn1 4 //Direction
 #define BIn2 2 //Direction 
 #define PWMB 15 //Speed
-
+#define MPuls1 5
+#define MPuls2 23
 //--------------V-SENS-----------------
 // #define VSense 16
 
-
+extern ESP32Encoder encoder;
 extern Servo frontS;
 extern Servo backS;
 
 //Constants to help remember the parameters
-const boolean m1 = 0;  //for motorDrive, motorStop, motorBrake functions. Left motor
-const boolean m2 = 1;  //for motorDrive, motorStop, motorBrake functions. Right motor
 const boolean fs = 0;
 const boolean bs = 1;
 
@@ -44,7 +43,7 @@ const int bsLLim = 40;
 
 
 void steer(boolean steering,int deg);
-// void motorDrive(boolean motorNumber, int motorSpeed);
-// void motorStop(boolean motorNumber);
+void motorDrive(int motorSpeed);
+void motorStop(void);
 
 #endif
