@@ -51,8 +51,7 @@ steer(boolean steering, int deg)
 void
 motorDrive(int motorSpeed)
 {
-    boolean
-      in1; // Relates to AIn1 or BIn1 (depending on the motor number specified)
+    boolean in1; // Relates to AIn1 or BIn1 (depending on the motor number specified)
 
     // Specify the Direction to turn the motor
     // Clockwise: BIn1 = HIGH and BIn2 = LOW

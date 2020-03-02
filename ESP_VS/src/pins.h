@@ -1,7 +1,7 @@
 // pins.h.h
 
-#ifndef _PINS.H_h
-#define _PINS .H_h
+#ifndef _PINS_H_h
+#define _PINS_H_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"

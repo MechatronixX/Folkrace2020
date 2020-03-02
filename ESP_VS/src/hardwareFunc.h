@@ -4,7 +4,8 @@
 #include <Arduino.h>
 #include <analogWrite.h> // For motor control
 #include <ESP32Encoder.h>
-#include <Servo.h>
+#include <ESP32_Servo.h>
+//#include <Servo.h>
 
 //--------------V-SENS-----------------
 // #define VSense 16
