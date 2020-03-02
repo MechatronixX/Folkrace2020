@@ -1,4 +1,9 @@
 #include <hardwareFunc.h>
+#include "pins.h"
+//--------------Motors-----------------
+
+
+
 
 ESP32Encoder encoder;
 Servo frontS;
@@ -52,13 +57,13 @@ void motorDrive(int motorSpeed) {
     in1 = LOW;
   }
   //Select the motor to turn, and set the direction and the speed
-  digitalWrite(BIn1, in1);
-  digitalWrite(BIn2, !in1);  //This is the opposite of the BIn1
-  analogWrite(PWMB, motorSpeed);
+  digitalWrite(pin::motor::BIn1, in1);
+  digitalWrite(pin::motor::BIn2, !in1);  //This is the opposite of the BIn1
+  analogWrite(pin::motor::PWMB, motorSpeed);
 }
 
 //This stops the specified motor by setting both IN pins to LOW
 void motorStop(void) {
-  digitalWrite(BIn1, LOW);
-  digitalWrite(BIn2, LOW);
+  digitalWrite(pin::motor::BIn1, LOW);
+  digitalWrite(pin::motor::BIn2, LOW);
 }

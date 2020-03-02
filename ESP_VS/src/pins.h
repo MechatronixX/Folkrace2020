@@ -21,6 +21,38 @@ namespace VL53
 
 
 }//namespace VL53
+
+//-----------STARTMODULE---------------
+// #define startPin 13
+// #define startOnOff 12
+
+//--------------SERVO------------------
+
+namespace servo
+{
+	constexpr uint8_t fsPin = 19;
+	constexpr uint8_t bsPin = 18;
+}
+
+namespace motor
+{
+	constexpr uint8_t  BIn1  =  4;
+	constexpr uint8_t BIn2  =  2; 
+	constexpr uint8_t PWMB  = 15; //Speed 
+	constexpr uint8_t MPuls1 = 5; 
+	constexpr uint8_t MPuls2 = 23; 
+
+}
+/*
+//Motor 2
+#define BIn1    4 //Direction
+#define BIn2    2 //Direction 
+#define PWMB    15 //Speed
+#define MPuls1  5
+#define MPuls2  23*/
+
+
+
 }//namespace pin
 
 

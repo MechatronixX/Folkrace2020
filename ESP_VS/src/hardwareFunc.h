@@ -6,22 +6,7 @@
 #include <ESP32Encoder.h>
 #include <Servo.h>
 
-//-----------STARTMODULE---------------
-// #define startPin 13
-// #define startOnOff 12
 
-//--------------SERVO------------------
-#define fsPin 19
-#define bsPin 18
-
-//--------------Motors-----------------
-
-//Motor 2
-#define BIn1 4 //Direction
-#define BIn2 2 //Direction 
-#define PWMB 15 //Speed
-#define MPuls1 5
-#define MPuls2 23
 //--------------V-SENS-----------------
 // #define VSense 16
 

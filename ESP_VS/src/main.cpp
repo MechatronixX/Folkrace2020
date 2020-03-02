@@ -5,9 +5,8 @@
 #include "pins.h"
 int incomingByte = 0;    // for incoming serial data
 
-
-
-void setup() {
+void setup()
+ {
   Serial.begin(115200);    // opens serial port, sets data rate to 115200 bps
   // Enable the weak pull down resistors
 	// ESP32Encoder::useInternalWeakPullResistors=true;
@@ -20,9 +19,9 @@ void setup() {
   // steer(bs,0);
   
   analogWriteResolution(8); // set resolution to 10 bits for all pins
-  pinMode(PWMB, OUTPUT);
-  pinMode(BIn1, OUTPUT);
-  pinMode(BIn2, OUTPUT);
+  pinMode(pin::motor::PWMB, OUTPUT);
+  pinMode(pin::motor::BIn1, OUTPUT);
+  pinMode(pin::motor::BIn2, OUTPUT);
 
   Wire.begin();
 
