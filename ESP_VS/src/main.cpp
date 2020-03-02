@@ -70,36 +70,38 @@ loop()
             Serial.println("Enter new steer angle");
         }
     }
+
+    motorDrive(100);
     // VL53array::readAll();
     // VL53array::printAll();
     /*
-    if (Serial.available())
-    {
-        // read the incoming byte:
-        int state = Serial.parseInt();
-        // say what you got:
-        if (state < -255)
-        {
-            Serial.printf("Can't execute command, too low value %d must be in "
-                          "range -255<->255\n",
-                          state);
-            Serial.println("Enter new throttle value");
-        }
-        else if (state > 255)
-        {
-            Serial.printf(
-              "Can't execute command, too high value %d must be in range "
-              "-255<->255\n",
-              state);
-            Serial.println("Enter new throttle value");
-        }
-        else
-        {
-            Serial.printf("Execute command, accelerate to %d\n", state);
-            motorDrive(state);
-            Serial.println("Enter new throttle value");
-        }
-    }*/
+      if (Serial.available())
+      {
+          // read the incoming byte:
+          int state = Serial.parseInt();
+          // say what you got:
+          if (state < -255)
+          {
+              Serial.printf("Can't execute command, too low value %d must be in "
+                            "range -255<->255\n",
+                            state);
+              Serial.println("Enter new throttle value");
+          }
+          else if (state > 255)
+          {
+              Serial.printf(
+                "Can't execute command, too high value %d must be in range "
+                "-255<->255\n",
+                state);
+              Serial.println("Enter new throttle value");
+          }
+          else
+          {
+              Serial.printf("Execute command, accelerate to %d\n", state);
+              motorDrive(state);
+              Serial.println("Enter new throttle value");
+          }
+      }*/
     Serial.println("------------------------------------------------");
     delay(1000);
 }
