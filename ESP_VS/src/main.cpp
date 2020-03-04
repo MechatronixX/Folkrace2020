@@ -9,20 +9,14 @@ int incomingByte = 0; // for incoming serial data
 void setup()
 {
     Serial.begin(115200);
-
+    Serial.println("INIT:");
+    delay(1000);
     // opens serial port, sets data rate to 115200 bps
     // Enable the weak pull down resistors
     // ESP32Encoder::useInternalWeakPullResistors=true;
     // encoder.clearCount();
     // encoder.attachHalfQuad(MPuls1,MPuls2);
-    frontS.attach(pin::servo::fsPin);
-    backS.attach(pin::servo::bsPin);
-    delay(1000);
-    // steer(fs, 0);
-    // steer(bs, 0);
-
-    // analogWriteResolution(8); // set resolution to 10 bits for all pins
-    pinMode(pin::motor::PWMB, OUTPUT);
+ 
     pinMode(pin::motor::BIn1, OUTPUT);
     pinMode(pin::motor::BIn2, OUTPUT);
 
@@ -37,6 +31,9 @@ void setup()
 
     VL53array::initAll();
 
+    initServofs();
+    initServobs();
+    initMotor();
     Serial.println("Enter new throttle dummy");
 }
 
@@ -64,42 +61,48 @@ void loop()
             Serial.printf("Execute command, turn to %d\n", state);
             steer(fs, state);
             steer(bs, state);
-            // analogWrite(pin::motor::PWMB, state);
+            if(state < 0)
+                motorDrive(state-100);
+            else if(state > 0)
+                motorDrive(state+100);
+            else
+                motorStop();
+            
             Serial.println("Enter new steer angle");
         }
     }
 
-    motorDrive(100);
+    
     // VL53array::readAll();
     // VL53array::printAll();
-    /*
-      if (Serial.available())
-      {
-          // read the incoming byte:
-          int state = Serial.parseInt();
-          // say what you got:
-          if (state < -255)
-          {
-              Serial.printf("Can't execute command, too low value %d must be in "
-                            "range -255<->255\n",
-                            state);
-              Serial.println("Enter new throttle value");
-          }
-          else if (state > 255)
-          {
-              Serial.printf(
-                "Can't execute command, too high value %d must be in range "
-                "-255<->255\n",
-                state);
-              Serial.println("Enter new throttle value");
-          }
-          else
-          {
-              Serial.printf("Execute command, accelerate to %d\n", state);
-              motorDrive(state);
-              Serial.println("Enter new throttle value");
-          }
-      }*/
+    
+    //   if (Serial.available())
+    //   {
+    //       // read the incoming byte:
+    //       int state = Serial.parseInt();
+    //       // say what you got:
+    //       if (state < -255)
+    //       {
+    //           Serial.printf("Can't execute command, too low value %d must be in "
+    //                         "range -255<->255\n",
+    //                         state);
+    //           Serial.println("Enter new throttle value");
+    //       }
+    //       else if (state > 255)
+    //       {
+    //           Serial.printf(
+    //             "Can't execute command, too high value %d must be in range "
+    //             "-255<->255\n",
+    //             state);
+    //           Serial.println("Enter new throttle value");
+    //       }
+    //       else
+    //       {
+    //           Serial.printf("Execute command, accelerate to %d\n", state);
+    //           motorDrive(state);
+    //           Serial.println("Enter new throttle value");
+    //       }
+    //   }
     Serial.println("------------------------------------------------");
     delay(1000);
 }

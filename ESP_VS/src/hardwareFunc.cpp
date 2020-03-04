@@ -3,8 +3,25 @@
 //--------------Motors-----------------
 
 ESP32Encoder encoder;
-Servo frontS;
-Servo backS;
+
+void initServofs(void)
+{
+    ledcSetup(1, 50, 16); // channel 1, 50 Hz, 16-bit resolution
+    ledcAttachPin(pin::servo::fsPin, 1);   // GPIO 22 assigned to channel 1
+    ledcWrite(1,4000);
+}
+void initServobs(void)
+{
+    ledcSetup(3, 50, 16); // channel 1, 50 Hz, 16-bit resolution
+    ledcAttachPin(pin::servo::bsPin, 3);   // GPIO 22 assigned to channel 1
+    ledcWrite(3,4000);
+}
+
+void initMotor(void){
+    ledcSetup(5,5000,8);
+    ledcAttachPin(pin::motor::PWMB,5);
+    ledcWrite(5,0);
+}
 
 /*
   This accuates a specified servo, to a specified angle in range -90<->90:
@@ -24,7 +41,9 @@ void steer(boolean steering, int deg)
         {
             i = fsHLim;
         }
-        frontS.write(i);
+        int value = map(i, 0, 180, 0, 8888);
+        Serial.printf("Duty cycle: %d\n",value);
+        ledcWrite(1,value);
     }
     else
     {
@@ -37,7 +56,8 @@ void steer(boolean steering, int deg)
         {
             i = bsHLim;
         }
-        backS.write(i);
+        int value = map(i, 0, 180, 0, 8888);
+        ledcWrite(3,value);
     }
 }
 
@@ -63,10 +83,15 @@ void motorDrive(int motorSpeed)
     {
         in1 = LOW;
     }
+    if (motorSpeed < 0)
+        motorSpeed =0;
+    if (motorSpeed > 255)
+        motorSpeed =255;
+    
     // Select the motor to turn, and set the direction and the speed
     digitalWrite(pin::motor::BIn1, in1);
     digitalWrite(pin::motor::BIn2, !in1); // This is the opposite of the BIn1
-    analogWrite(pin::motor::PWMB, motorSpeed);
+    ledcWrite(5,motorSpeed);
 }
 
 // This stops the specified motor by setting both IN pins to LOW
