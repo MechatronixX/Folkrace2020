@@ -1,10 +1,14 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include "hardwareFunc.h"
 
+#include "hardwareFunc.h"
 #include "pins.h"
+#include <Servo.h>
 #include "VL53_array.h"
 int incomingByte = 0; // for incoming serial data
+
+steeringServo frontSteering(pin::servo::fsPin, 1);
+steeringServo rearSteering(pin::servo::bsPin, 3);
 
 void setup()
 {
@@ -12,11 +16,14 @@ void setup()
     Serial.println("INIT:");
     delay(1000);
     // opens serial port, sets data rate to 115200 bps
-    // Enable the weak pull down resistors
+    // Enable the weak pull down resistors10
     // ESP32Encoder::useInternalWeakPullResistors=true;
     // encoder.clearCount();
     // encoder.attachHalfQuad(MPuls1,MPuls2);
- 
+
+    frontSteering.Begin();
+    rearSteering.Begin();
+
     pinMode(pin::motor::BIn1, OUTPUT);
     pinMode(pin::motor::BIn2, OUTPUT);
 
@@ -59,23 +66,25 @@ void loop()
         {
             Serial.printf("Execute command, turn to %d\n", state);
             Serial.printf("Execute command, turn to %d\n", state);
-            steer(fs, state);
-            steer(bs, state);
-            if(state < 0)
-                motorDrive(state-100);
-            else if(state > 0)
-                motorDrive(state+100);
+            // steer(fs, state);
+            // steer(bs, state);
+
+            frontSteering.setAngle(state);
+            rearSteering.setAngle(state);
+            if (state < 0)
+                motorDrive(state - 100);
+            else if (state > 0)
+                motorDrive(state + 100);
             else
                 motorStop();
-            
+
             Serial.println("Enter new steer angle");
         }
     }
 
-    
     // VL53array::readAll();
     // VL53array::printAll();
-    
+
     //   if (Serial.available())
     //   {
     //       // read the incoming byte:
