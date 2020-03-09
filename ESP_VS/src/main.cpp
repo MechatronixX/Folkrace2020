@@ -23,7 +23,7 @@ void setup()
     Serial.begin(115200);
     Serial.println("INIT:");
     delay(1000);
-    // opens serial port, sets data rate to 115200 bps
+
     // Enable the weak pull down resistors10
     // ESP32Encoder::useInternalWeakPullResistors=true;
     // encoder.clearCount();
@@ -46,8 +46,6 @@ void setup()
 
     VL53array::initAll();
 
-    initServofs();
-    initServobs();
     initMotor();
     Serial.println("Enter new throttle dummy");
 }
@@ -95,9 +93,9 @@ void loop()
     else
     {
         /// Simple proportional controller for following a wall
-        constexpr float set_distance_mm = 150;
+        constexpr float set_distance_mm = 250;
         constexpr float meter_to_mm = 1000;
-        constexpr float steering_gain = 0.1;
+        constexpr float steering_gain = 0.3;
         VL53array::readAll();
 
         float steering_angle =
@@ -105,36 +103,4 @@ void loop()
 
         frontSteering.setAngle(int8_t(steering_angle));
     }
-
-    // VL53array::printAll();
-
-    //   if (Serial.available())
-    //   {
-    //       // read the incoming byte:
-    //       int state = Serial.parseInt();
-    //       // say what you got:
-    //       if (state < -255)
-    //       {
-    //           Serial.printf("Can't execute command, too low value %d must be in "
-    //                         "range -255<->255\n",
-    //                         state);
-    //           Serial.println("Enter new throttle value");
-    //       }
-    //       else if (state > 255)
-    //       {
-    //           Serial.printf(
-    //             "Can't execute command, too high value %d must be in range "
-    //             "-255<->255\n",
-    //             state);
-    //           Serial.println("Enter new throttle value");
-    //       }
-    //       else
-    //       {
-    //           Serial.printf("Execute command, accelerate to %d\n", state);
-    //           motorDrive(state);
-    //           Serial.println("Enter new throttle value");
-    //       }
-    //   }
-    // Serial.println("------------------------------------------------");
-    // delay(1000);
 }

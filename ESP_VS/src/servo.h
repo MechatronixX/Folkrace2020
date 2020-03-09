@@ -66,12 +66,8 @@ class steeringServo : public Servo
     /// Set angle betweeen -90 to 90
     void setAngle(int8_t angle)
     {
-        Serial.print("Angle before: ");
-        Serial.println(angle);
         angle = clamp<int8_t>(angle, lower_angle_limit_, upper_angle_limit_);
 
-        Serial.print("Angle after: ");
-        Serial.println(angle);
         // A servo usually takes a pulse 0-~2.5 ms that corresponds to
         // 0-180 degrees. For a 16 bit PWM at 50 Hz corresponds
         // to around 2.5 ms

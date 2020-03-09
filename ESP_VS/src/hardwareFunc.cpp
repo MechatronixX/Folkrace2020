@@ -3,19 +3,6 @@
 
 ESP32Encoder encoder;
 
-void initServofs(void)
-{
-    ledcSetup(1, 50, 16);                // channel 1, 50 Hz, 16-bit resolution
-    ledcAttachPin(pin::servo::fsPin, 1); // GPIO 22 assigned to channel 1
-    ledcWrite(1, 4000);
-}
-void initServobs(void)
-{
-    ledcSetup(3, 50, 16);                // channel 1, 50 Hz, 16-bit resolution
-    ledcAttachPin(pin::servo::bsPin, 3); // GPIO 22 assigned to channel 1
-    ledcWrite(3, 4000);
-}
-
 void initMotor(void)
 {
     ledcSetup(5, 5000, 8);
