@@ -14,9 +14,26 @@ namespace receivedValues
 {
 float steering_gain;
 int manual_steering;
+int motor_speed;
 }
 
-float parseOutFloat(Stream& busToParse)
+char* serialCommandToString(serialCommand command)
+{
+    switch (command)
+    {
+        case serialCommand::STOP:
+            return "STOP";
+            break;
+        case serialCommand::AUTO:
+            return "AUTO";
+            break;
+        case serialCommand::MANUAL:
+            return "MANUAL";
+            break;
+    }
+}
+
+float parseOutFloat(Stream& busToParse, bool use_delay = true)
 {
     blueTooth.println("Enter a value. ");
 
@@ -24,8 +41,8 @@ float parseOutFloat(Stream& busToParse)
     {
     };
 
-    // TODO: Trim away whenever this is needed for fast code
-    delay(2000);
+    if (use_delay)
+        delay(2000);
 
     constexpr uint8_t buffer_size = 40;
     char buffer[buffer_size];
@@ -37,16 +54,15 @@ float parseOutFloat(Stream& busToParse)
 
     float return_val = atof(buffer);
 
-    /* TODO: Try to send this directly like busToParse.println("I got value") */
-    blueTooth.println("I got value");
-    blueTooth.println(return_val);
+    // TODO: In some arduino implementations you have to do Serial.print here instead.
+    busToParse.println("I got value: ");
+    busToParse.println(return_val);
 
     return return_val;
 }
-// TODO: Define this in the anon. namespace of communication
+
 int parseSerial(Stream& busToParse)
 {
-
     int bytesRead = 0;
 
     while (busToParse.available())
@@ -82,6 +98,7 @@ int parseSerial(Stream& busToParse)
                         break;
                     case 'm':
                         blueTooth.println("Motor.");
+                        receivedValues::motor_speed = static_cast<int>(parseOutFloat(busToParse));
                         break;
                     case 's':
                         blueTooth.println("Steering.");
@@ -96,17 +113,6 @@ int parseSerial(Stream& busToParse)
                 break;
         };
     }
-
-    return bytesRead;
-}
-
-int pollSerial()
-{
-
-    int bytesRead = 0;
-
-    bytesRead += parseSerial(blueTooth);
-    // bytesRead += parseSerial(wireSerial);
 
     return bytesRead;
 }

@@ -21,7 +21,7 @@ namespace receivedValues
 {
 extern float steering_gain;
 extern int manual_steering;
-extern int manual_throttle;
+extern int motor_speed;
 }
 
 /** Polls all connected serial buses for commands. */
@@ -40,6 +40,8 @@ enum class serialCommand : char
     STOP = 's',
     TUNE = 't',
 };
+
+char* serialCommandToString(serialCommand command);
 
 extern serialCommand current_serial_control_command;
 };

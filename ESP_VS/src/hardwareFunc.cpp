@@ -12,6 +12,8 @@ void initMotor(void)
 
 /*
   This accuates a specified servo, to a specified angle in range -90<->90:
+
+  TODO: Should probably be deprecated
   */
 void steer(boolean steering, int deg)
 {
