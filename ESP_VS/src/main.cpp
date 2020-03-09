@@ -3,8 +3,10 @@
 
 #include "hardwareFunc.h"
 #include "config.h"
+#include <communication.h>
 #include <Servo.h>
 #include "VL53_array.h"
+
 int incomingByte = 0; // for incoming serial data
 
 // steeringServo(uint16_t pin, uint16_t channel, int8_t lower_angle_limit = -90, int8_t upper_angle_limit = 90,
@@ -50,57 +52,40 @@ void setup()
     Serial.println("Enter new throttle dummy");
 }
 
+int last_incoming_int = 0;
+
+/// Simple proportional controller for following a wall
+constexpr float set_distance_mm = 250;
+constexpr float meter_to_mm = 1000;
+constexpr float steering_gain = 0.3;
+
+float steering_angle;
+
 void loop()
 {
+    // TODO: See if we got a mode change and write something informative.
+    communication::parseSerial(Serial);
 
-    // send data only when you receive data :
-    if (Serial.available() > 0)
+    VL53array::readAll();
+
+    switch (communication::current_serial_control_command)
     {
-        // read the incoming byte:
-        int state = Serial.parseInt();
-        // say what you got:
-        if (state < -90)
-        {
-            Serial.printf("Can't execute command, too low value %d must be in range -90<->90\n", state);
-            Serial.println("Enter new steer angle");
-        }
-        else if (state > 90)
-        {
-            Serial.printf("Can't execute command, too high value %d must be in range -90<->90\n", state);
-            Serial.println("Enter new steer angle");
-        }
-        else
-        {
-            Serial.printf("Execute command, turn to %d\n", state);
-            Serial.printf("Execute command, turn to %d\n", state);
-            // steer(fs, state);
-            // steer(bs, state);
+        case communication::serialCommand::AUTO:
 
-            frontSteering.setAngle(state);
-            rearSteering.setAngle(0);
+            steering_angle = steering_gain * (set_distance_mm -
+                                              VL53array::sensors[VL53array::FRONT_RIGHT].result.distance * meter_to_mm);
 
-            /*
-            if (state < 0)
-                motorDrive(state - 100);
-            else if (state > 0)
-                motorDrive(state + 100);
-            else
-                motorStop();
-            */
-            Serial.println("Enter new steer angle");
-        }
-    }
-    else
-    {
-        /// Simple proportional controller for following a wall
-        constexpr float set_distance_mm = 250;
-        constexpr float meter_to_mm = 1000;
-        constexpr float steering_gain = 0.3;
-        VL53array::readAll();
+            frontSteering.setAngle(int8_t(steering_angle));
 
-        float steering_angle =
-          steering_gain * (set_distance_mm - VL53array::sensors[VL53array::FRONT_RIGHT].result.distance * meter_to_mm);
+            break;
 
-        frontSteering.setAngle(int8_t(steering_angle));
-    }
+        case communication::serialCommand::MANUAL:
+            frontSteering.setAngle(communication::receivedValues::manual_steering);
+            // rearSteering.setAngle(communication::receivedValues::manual_steering);
+            break;
+
+        case communication::serialCommand::STOP:
+            // TODO
+            break;
+    };
 }
