@@ -1,7 +1,7 @@
 // pins.h.h
 
-#ifndef _PINS_H_h
-#define _PINS_H_h
+#ifndef _CONFIG_H_h
+#define _CONFIG_H_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
@@ -43,5 +43,21 @@ constexpr uint8_t MPuls2 = 23;
 }
 
 } // namespace pin
+
+namespace config
+{
+namespace servo
+{
+
+// TODO: The servos seem to have assymetric gains in each direction strangely enough
+const int front_centering_offs = 9;
+const int front_max_angle = 25; // Max/min angles are in relation to the offset.
+const int front_min_angle = -25;
+
+const int rear_centering_offs = -13;
+const int rear_max_angle = 20;
+const int rear_min_angle = -20;
+}
+}
 
 #endif

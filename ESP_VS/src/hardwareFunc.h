@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <ESP32Encoder.h>
 #include "esp32-hal-ledc.h"
-#include "pins.h"
+#include "config.h"
 
 //--------------V-SENS-----------------
 // #define VSense 16
