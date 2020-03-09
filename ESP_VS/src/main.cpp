@@ -7,11 +7,10 @@
 #include <Servo.h>
 #include "VL53_array.h"
 
-int incomingByte = 0; // for incoming serial data
-
 using namespace config;
+using namespace communication;
 
-// Make sure the servos are on different channels!
+// Make sure the servos are on different PWM channels!
 steeringServo frontSteering(pin::servo::fsPin, 1, servo::front_min_angle, servo::front_max_angle,
                             servo::front_centering_offs);
 
@@ -47,10 +46,10 @@ void setup()
     VL53array::initAll();
 
     initMotor();
-    Serial.println("Enter new throttle dummy");
-}
 
-int last_incoming_int = 0;
+    Serial.print("\n \n Starting in mode: ");
+    Serial.println(serialCommandToString(current_serial_control_command));
+}
 
 /// Simple proportional controller for following a wall
 constexpr float set_distance_mm = 250;
@@ -63,8 +62,8 @@ communication::serialCommand last_serial_control_command = communication::curren
 
 void loop()
 {
-    using namespace communication;
-    // TODO: See if we got a mode change and write something informative.
+
+    // Read incoming communication and inform a user about a main mode change
     parseSerial(Serial);
 
     if (current_serial_control_command != last_serial_control_command)
@@ -77,12 +76,14 @@ void loop()
 
     last_serial_control_command = current_serial_control_command;
 
+    // Read all sensors
     VL53array::readAll();
 
     switch (current_serial_control_command)
     {
         case serialCommand::AUTO:
 
+            // Simple proportional controller trying to keep a set distance to a wall
             steering_angle = steering_gain * (set_distance_mm -
                                               VL53array::sensors[VL53array::FRONT_RIGHT].result.distance * meter_to_mm);
 
@@ -101,7 +102,7 @@ void loop()
             break;
 
         case serialCommand::TUNE:
-            // Handled internally
+            // Handled internally in the communication class.
             break;
     };
 }

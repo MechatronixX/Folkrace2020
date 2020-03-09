@@ -2,6 +2,7 @@
 //--------------Motors-----------------
 
 ESP32Encoder encoder;
+#include <servo.h>
 
 void initMotor(void)
 {
@@ -72,15 +73,11 @@ void motorDrive(int motorSpeed)
     {
         in1 = LOW;
     }
-    if (motorSpeed < 0)
-        motorSpeed = 0;
-    if (motorSpeed > 255)
-        motorSpeed = 255;
 
     // Select the motor to turn, and set the direction and the speed
     digitalWrite(pin::motor::BIn1, in1);
     digitalWrite(pin::motor::BIn2, !in1); // This is the opposite of the BIn1
-    ledcWrite(5, motorSpeed);
+    ledcWrite(5, clamp<int>(motorSpeed, 0, 255));
 }
 
 // This stops the specified motor by setting both IN pins to LOW

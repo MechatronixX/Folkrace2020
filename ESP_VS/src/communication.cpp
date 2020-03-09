@@ -35,7 +35,8 @@ char* serialCommandToString(serialCommand command)
 
 float parseOutFloat(Stream& busToParse, bool use_delay = true)
 {
-    blueTooth.println("Enter a value. ");
+    // TODO: In some arduino implementations you have to do Serial.print here instead.
+    busToParse.println("Enter a value. ");
 
     while (busToParse.available() < 1)
     {
@@ -44,7 +45,7 @@ float parseOutFloat(Stream& busToParse, bool use_delay = true)
     if (use_delay)
         delay(2000);
 
-    constexpr uint8_t buffer_size = 40;
+    constexpr uint8_t buffer_size = 12;
     char buffer[buffer_size];
     uint8_t buffer_index = 0;
     while (busToParse.available() && buffer_index < buffer_size - 1)
@@ -54,7 +55,6 @@ float parseOutFloat(Stream& busToParse, bool use_delay = true)
 
     float return_val = atof(buffer);
 
-    // TODO: In some arduino implementations you have to do Serial.print here instead.
     busToParse.println("I got value: ");
     busToParse.println(return_val);
 
@@ -83,8 +83,8 @@ int parseSerial(Stream& busToParse)
 
             case serialCommand::TUNE:
 
-                blueTooth.println(
-                  "In parameter tuning mode. Enter 'g' for steering gain, 'm' for motor and 's' for steering ");
+                blueTooth.println("In parameter tuning mode. Enter 'g' for steering gain, 'm' for motor speed and 's' "
+                                  "for steering angle ");
 
                 // Wait for a full float to arrive
                 while (busToParse.available() < 1)
@@ -103,6 +103,8 @@ int parseSerial(Stream& busToParse)
                     case 's':
                         blueTooth.println("Steering.");
                         receivedValues::manual_steering = static_cast<int>(parseOutFloat(busToParse));
+                        break;
+                    default:
                         break;
                 };
 

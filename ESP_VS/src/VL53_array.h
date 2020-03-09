@@ -59,11 +59,11 @@ void initAll()
 
         if (!sensors[i].init())
         {
-            Serial.println("Failed to detect and initialize sensor!");
+            Serial.println("Failed to detect and initialize VL053LX!");
         }
         else
         {
-            Serial.println("Init ok!");
+            Serial.println("Init of VL53L0X ok.");
         }
         sensors[i].setTimeout(default_timeout);
         sensors[i].startContinuous();

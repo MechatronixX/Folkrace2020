@@ -24,7 +24,8 @@ extern int manual_steering;
 extern int motor_speed;
 }
 
-/** Polls all connected serial buses for commands. */
+/// Parse out commands and data from a serial bus.
+///@return Number of bytes received
 int parseSerial(Stream& busToParse);
 
 /** Do a loopback test. Add this to the mainloop and call it with an argument such as "Serial1". All messages on Serial1

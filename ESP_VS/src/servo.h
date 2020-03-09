@@ -42,21 +42,12 @@ T clamp(T value, T min, T max)
         return value;
 }
 
-template <typename T>
-int sgn(T val)
-{
-    if (val >= T(0))
-        return 1;
-    else
-        return -1;
-}
-
 class steeringServo : public Servo
 {
   public:
     steeringServo(uint16_t pin, uint16_t channel, int8_t lower_angle_limit = -90, int8_t upper_angle_limit = 90,
                   int8_t centering_offset = 0)
-      : Servo(pin, channel, 50)
+      : Servo(pin, channel, 50) // Steering servo set to run at 50 Hz.
       , lower_angle_limit_(lower_angle_limit)
       , upper_angle_limit_(upper_angle_limit)
       , centering_offset_(centering_offset)
