@@ -30,6 +30,9 @@ char* serialCommandToString(serialCommand command)
         case serialCommand::MANUAL:
             return "MANUAL";
             break;
+        default:
+            return "UNKNOWN";
+            break;
     }
 }
 

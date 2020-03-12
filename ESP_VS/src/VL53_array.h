@@ -30,8 +30,8 @@ enum ID : unsigned int
     FRONT_CENTER,
     FRONT_LEFT,
     FRONT_RIGHT,
-    CENTER_LEFT,
-    CENTER_RIGHT,
+    SIDE_LEFT,
+    SIDE_RIGHT,
     N_SENSORS // Good thing with the enum approach is knowing compile time all
               // array sizes.
 };
@@ -97,8 +97,6 @@ void print(uint8_t index)
     Serial.println();
 }
 
-// TODO: Put anon namespace here.
-
 // Print the sensors one by one, saves a lot of memory instead of returning a
 // string
 // with all sensors.
@@ -111,6 +109,26 @@ void printOne(uint8_t index)
     // Serial.println("Hallolu");
     // Serial.print(results[index].distance * 1000);
     Serial.print(buffer);
+}
+
+constexpr size_t csv_buffer_size = num_sensors * 6;
+char csv_buffer[csv_buffer_size];
+
+char* toCSVmillimeter()
+{
+    constexpr float meter_to_mm = 1000;
+
+    uint16_t sensor_mm[num_sensors];
+
+    for (uint8_t i = 0; i < num_sensors; i++)
+    {
+        sensor_mm[i] = static_cast<uint16_t>(sensors[i].result.distance * meter_to_mm);
+    }
+
+    snprintf(csv_buffer, csv_buffer_size, "%d,%d,%d,%d,%d", sensor_mm[SIDE_LEFT], sensor_mm[FRONT_LEFT],
+             sensor_mm[FRONT_CENTER], sensor_mm[FRONT_RIGHT], sensor_mm[SIDE_RIGHT]);
+
+    return csv_buffer;
 }
 
 void shutAllOff()

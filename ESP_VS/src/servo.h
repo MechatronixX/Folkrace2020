@@ -20,7 +20,7 @@ class Servo
     {
     }
 
-    void Begin()
+    void begin()
     {
         ledcSetup(channel_, frequency_, resolution_);
         ledcAttachPin(pin_, channel_);

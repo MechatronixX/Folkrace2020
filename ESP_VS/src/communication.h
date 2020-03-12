@@ -36,7 +36,7 @@ void loopBackTest(HardwareSerial& port);
 enum class serialCommand : char
 {
 
-    AUTO = 'r',
+    AUTO = 'a',
     MANUAL = 'm',
     STOP = 's',
     TUNE = 't',

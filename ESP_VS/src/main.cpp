@@ -28,8 +28,8 @@ void setup()
     // encoder.clearCount();
     // encoder.attachHalfQuad(MPuls1,MPuls2);
 
-    frontSteering.Begin();
-    rearSteering.Begin();
+    frontSteering.begin();
+    rearSteering.begin();
 
     pinMode(pin::motor::BIn1, OUTPUT);
     pinMode(pin::motor::BIn2, OUTPUT);
@@ -40,8 +40,8 @@ void setup()
     VL53array::sensors[VL53array::FRONT_CENTER] = VL53extra(pin::VL53::front_center);
     VL53array::sensors[VL53array::FRONT_LEFT] = VL53extra(pin::VL53::front_left);
     VL53array::sensors[VL53array::FRONT_RIGHT] = VL53extra(pin::VL53::front_right);
-    VL53array::sensors[VL53array::CENTER_LEFT] = VL53extra(pin::VL53::center_left);
-    VL53array::sensors[VL53array::CENTER_RIGHT] = VL53extra(pin::VL53::center_right);
+    VL53array::sensors[VL53array::SIDE_LEFT] = VL53extra(pin::VL53::center_left);
+    VL53array::sensors[VL53array::SIDE_RIGHT] = VL53extra(pin::VL53::center_right);
 
     VL53array::initAll();
 
@@ -88,6 +88,7 @@ void loop()
                                               VL53array::sensors[VL53array::FRONT_RIGHT].result.distance * meter_to_mm);
 
             frontSteering.setAngle(int8_t(steering_angle));
+            rearSteering.setAngle(0);
 
             break;
 
@@ -99,10 +100,18 @@ void loop()
 
         case serialCommand::STOP:
             motorStop();
+            frontSteering.setAngle(0);
+            rearSteering.setAngle(0);
+
             break;
 
         case serialCommand::TUNE:
             // Handled internally in the communication class.
             break;
     };
+
+    // CSV data prinouts
+    {
+        Serial.println(VL53array::toCSVmillimeter());
+    }
 }
