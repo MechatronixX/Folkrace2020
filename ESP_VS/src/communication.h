@@ -20,18 +20,21 @@ namespace communication
 namespace receivedValues
 {
 extern float steering_gain;
-extern int manual_steering;
+extern int manual_steering_front;
+extern int manual_steering_rear;
 extern int motor_speed;
 }
 
 /// Parse out commands and data from a serial bus.
 ///@return Number of bytes received
-int parseSerial(Stream& busToParse);
+int
+parseSerial(Stream& busToParse);
 
 /** Do a loopback test. Add this to the mainloop and call it with an argument such as "Serial1". All messages on Serial1
 should echo back now. Make
 sure no other program unit is already reading the port. */
-void loopBackTest(HardwareSerial& port);
+void
+loopBackTest(HardwareSerial& port);
 
 enum class serialCommand : char
 {
@@ -42,7 +45,8 @@ enum class serialCommand : char
     TUNE = 't',
 };
 
-char* serialCommandToString(serialCommand command);
+char*
+serialCommandToString(serialCommand command);
 
 extern serialCommand current_serial_control_command;
 };

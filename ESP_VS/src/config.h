@@ -50,11 +50,13 @@ namespace servo
 {
 
 // TODO: The servos seem to have assymetric gains in each direction strangely enough
-const int front_centering_offs = 9;
+// const int front_centering_offs = 9;
+const int front_centering_offs = 0;
 const int front_max_angle = 25; // Max/min angles are in relation to the offset.
 const int front_min_angle = -25;
 
-const int rear_centering_offs = -13;
+// const int rear_centering_offs = -13;
+const int rear_centering_offs = 0;
 const int rear_max_angle = 20;
 const int rear_min_angle = -20;
 }

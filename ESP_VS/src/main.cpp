@@ -1,23 +1,30 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#include "hardwareFunc.h"
-#include "config.h"
-#include <communication.h>
-#include <Servo.h>
 #include "VL53_array.h"
+#include "config.h"
+#include "hardwareFunc.h"
+#include <Servo.h>
+#include <communication.h>
 
 using namespace config;
 using namespace communication;
 
 // Make sure the servos are on different PWM channels!
-steeringServo frontSteering(pin::servo::fsPin, 1, servo::front_min_angle, servo::front_max_angle,
+steeringServo frontSteering(pin::servo::fsPin,
+                            1,
+                            servo::front_min_angle,
+                            servo::front_max_angle,
                             servo::front_centering_offs);
 
-steeringServo rearSteering(pin::servo::bsPin, 3, servo::rear_min_angle, servo::rear_max_angle,
+steeringServo rearSteering(pin::servo::bsPin,
+                           3,
+                           servo::rear_min_angle,
+                           servo::rear_max_angle,
                            servo::rear_centering_offs);
 
-void setup()
+void
+setup()
 {
     Serial.begin(115200);
     Serial.println("INIT:");
@@ -60,7 +67,8 @@ float steering_angle;
 
 communication::serialCommand last_serial_control_command = communication::current_serial_control_command;
 
-void loop()
+void
+loop()
 {
 
     // Read incoming communication and inform a user about a main mode change
@@ -93,9 +101,9 @@ void loop()
             break;
 
         case serialCommand::MANUAL:
-            frontSteering.setAngle(receivedValues::manual_steering);
+            frontSteering.setAngle(receivedValues::manual_steering_front);
+            rearSteering.setAngle(receivedValues::manual_steering_rear);
             motorDrive(receivedValues::motor_speed);
-            // rearSteering.setAngle(communication::receivedValues::manual_steering);
             break;
 
         case serialCommand::STOP:

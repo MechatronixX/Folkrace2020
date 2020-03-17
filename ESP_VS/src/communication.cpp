@@ -13,11 +13,13 @@ serialCommand current_serial_control_command = serialCommand::MANUAL;
 namespace receivedValues
 {
 float steering_gain;
-int manual_steering;
+int manual_steering_front;
+int manual_steering_rear;
 int motor_speed;
 }
 
-char* serialCommandToString(serialCommand command)
+char*
+serialCommandToString(serialCommand command)
 {
     switch (command)
     {
@@ -36,7 +38,8 @@ char* serialCommandToString(serialCommand command)
     }
 }
 
-float parseOutFloat(Stream& busToParse, bool use_delay = true)
+float
+parseOutFloat(Stream& busToParse, bool use_delay = true)
 {
     // TODO: In some arduino implementations you have to do Serial.print here instead.
     busToParse.println("Enter a value. ");
@@ -64,7 +67,8 @@ float parseOutFloat(Stream& busToParse, bool use_delay = true)
     return return_val;
 }
 
-int parseSerial(Stream& busToParse)
+int
+parseSerial(Stream& busToParse)
 {
     int bytesRead = 0;
 
@@ -103,9 +107,13 @@ int parseSerial(Stream& busToParse)
                         blueTooth.println("Motor.");
                         receivedValues::motor_speed = static_cast<int>(parseOutFloat(busToParse));
                         break;
-                    case 's':
-                        blueTooth.println("Steering.");
-                        receivedValues::manual_steering = static_cast<int>(parseOutFloat(busToParse));
+                    case 'f':
+                        blueTooth.println("Steering front.");
+                        receivedValues::manual_steering_front = static_cast<int>(parseOutFloat(busToParse));
+                        break;
+                    case 'r':
+                        blueTooth.println("Steering rear.");
+                        receivedValues::manual_steering_rear = static_cast<int>(parseOutFloat(busToParse));
                         break;
                     default:
                         break;
@@ -122,7 +130,8 @@ int parseSerial(Stream& busToParse)
     return bytesRead;
 }
 
-void loopBackTest(HardwareSerial& port)
+void
+loopBackTest(HardwareSerial& port)
 {
     if (!port.available())
     {
